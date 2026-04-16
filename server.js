@@ -1,3 +1,5 @@
+require("dotenv").config(); // ✅ add this
+
 const express = require("express");
 const Razorpay = require("razorpay");
 const cors = require("cors");
@@ -13,10 +15,10 @@ const PORT = process.env.PORT || 3000;
 
 console.log("🔥 SERVER STARTED");
 
-/// 🔑 Razorpay config
+/// 🔑 Razorpay config (ENV से आएगा)
 const razorpay = new Razorpay({
-  key_id: "rzp_test_SUkTK6lOW9NGqn",
-  key_secret: "PPdhQ1Wwrb2cDFrTatdjho2Y",
+  key_id: process.env.RAZORPAY_KEY_ID,       // ✅ changed
+  key_secret: process.env.RAZORPAY_KEY_SECRET, // ✅ changed
 });
 
 /// 🔥 CREATE ORDER
@@ -47,7 +49,10 @@ app.post("/verify-payment", (req, res) => {
     const { order_id, payment_id, signature } = req.body;
 
     const generated_signature = crypto
-      .createHmac("sha256", "PPdhQ1Wwrb2cDFrTatdjho2Y") // 🔥 SAME SECRET
+      .createHmac(
+        "sha256",
+        process.env.RAZORPAY_KEY_SECRET // ✅ same secret use
+      )
       .update(order_id + "|" + payment_id)
       .digest("hex");
 
