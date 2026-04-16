@@ -15,8 +15,8 @@ console.log("🔥 SERVER STARTED");
 
 /// 🔑 Razorpay config
 const razorpay = new Razorpay({
-  key_id: "rzp_test_SUkTK6lOW9NGqn",
-  key_secret: "PPdhQ1Wwrb2cDFrTatdjho2Y",
+  key_id: "rzp_live_SeFcV9f35r5NIF",
+  key_secret: "tFyFl3l7JKMJJp1LbdZVBfQv",
 });
 
 /// 🔥 CREATE ORDER
