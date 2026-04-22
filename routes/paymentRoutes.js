@@ -13,20 +13,26 @@ const razorpay = new Razorpay({
 });
 
 /// CREATE ORDER
-router.post("/create-order", async (req, res) => {
+router.post("/verify", (req, res) => {
   try {
-    const { amount } = req.body;
+    const { order_id, payment_id, signature } = req.body;
 
-    const order = await razorpay.orders.create({
-      amount: amount * 100,
-      currency: "INR",
-      receipt: "receipt_" + Date.now(),
-    });
+    if (!order_id || !payment_id || !signature) {
+      return res.status(400).json({ success: false });
+    }
 
-    res.json(order);
+    const expected = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(order_id + "|" + payment_id)
+      .digest("hex");
+
+    if (expected === signature) {
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: false });
+    }
   } catch (err) {
-    console.log(err);
-    res.status(500).send("Order error");
+    return res.status(500).json({ success: false });
   }
 });
 
